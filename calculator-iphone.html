@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="format-detection" content="telephone=no" />
 
-  <!-- iOS "Add to Home Screen" -->
+  <!-- iOS Add to Home Screen -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Fuel Calc" />
@@ -27,18 +27,22 @@
       --input:#0a1326;
     }
 
-    body {
+    html, body {
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      padding:0;
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden; /* чтобы страница не уезжала вправо */
       background: radial-gradient(1200px 600px at 20% 0%, rgba(56,189,248,.10), transparent 60%),
                   radial-gradient(900px 500px at 80% 10%, rgba(34,197,94,.10), transparent 55%),
                   var(--bg);
       color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       -webkit-text-size-adjust: 100%;
     }
 
     .wrap { max-width: 1100px; margin: 20px auto; padding: 0 14px 40px; }
-    h1 { font-size: 20px; margin: 0 0 12px; color: var(--text); }
+    h1 { font-size: 20px; margin: 0 0 12px; }
 
     .row { display:flex; gap:12px; flex-wrap:wrap; }
 
@@ -48,6 +52,7 @@
       border-radius:14px;
       padding:16px;
       box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      max-width:100%;
     }
 
     .inputs { flex: 1 1 520px; }
@@ -62,14 +67,13 @@
       color:var(--text);
       cursor:pointer;
       font-size: 15px;
-      min-height: 44px; /* iPhone friendly tap target */
+      min-height: 44px;
     }
     .tabbtn.active {
       border-color: rgba(34,197,94,.65);
       box-shadow: 0 0 0 2px rgba(34,197,94,.18) inset;
     }
 
-    /* Поля ввода — крупнее */
     label { display:block; font-size: 13px; color: var(--muted); margin: 12px 0 7px; }
     input {
       width: 100%;
@@ -94,7 +98,34 @@
     .profit { font-size: 24px; margin:0; }
     .profit small { color: var(--muted); font-size: 12px; font-weight: 500; }
 
-    table { width:100%; border-collapse: collapse; margin-top: 12px; overflow:hidden; border-radius: 14px; }
+    .note { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.4; }
+    .mono { font-variant-numeric: tabular-nums; }
+
+    /* ВАЖНО: мобильная таблица */
+    .tableWrap{
+      width:100%;
+      max-width:100%;
+      overflow-x:auto;
+      -webkit-overflow-scrolling: touch; /* плавный скролл на iOS */
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.08);
+    }
+
+    .scrollHint{
+      display:none;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+
+    table {
+      width:100%;
+      border-collapse: collapse;
+      min-width: 760px; /* чтобы на телефоне уходило в скролл, а не ломало вёрстку */
+      background: transparent;
+    }
+
     th, td { padding: 11px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
     th {
       text-align:left;
@@ -103,17 +134,26 @@
       background: var(--card2);
       position: sticky;
       top:0;
+      z-index: 1;
+      white-space: nowrap;
     }
-    td { font-size: 13px; }
+    td { font-size: 13px; white-space: nowrap; }
+
     tr.section td {
       background: rgba(56,189,248,.06);
       color: rgba(230,237,247,.85);
       font-weight:700;
+      white-space: normal;
     }
 
-    .mono { font-variant-numeric: tabular-nums; }
-    .muted { color: var(--muted); }
-    .note { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.4; }
+    /* Мелкие улучшения под телефон */
+    @media (max-width: 520px){
+      .wrap { padding: 0 12px 32px; }
+      .profit { font-size: 22px; }
+      .scrollHint { display:block; }
+      td, th { padding: 10px 8px; }
+      table { min-width: 720px; }
+    }
   </style>
 </head>
 
@@ -168,57 +208,62 @@
     </div>
 
     <div class="card" style="margin-top:12px">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:52%">Показатель</th>
-            <th style="width:24%">AMD</th>
-            <th style="width:24%">USD</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="section"><td colspan="3">Входные данные (видимые)</td></tr>
-          <tr><td>Цена закупки ($/тонна)</td><td class="mono" id="t_purchaseAmd">—</td><td class="mono" id="t_purchaseUsd">—</td></tr>
-          <tr><td>Доставка ($/тонна)</td><td class="mono" id="t_deliveryAmd">—</td><td class="mono" id="t_deliveryUsd">—</td></tr>
-          <tr><td>Цена продажи (AMD/литр)</td><td class="mono" id="t_sellAmdPerL">—</td><td class="mono" id="t_sellUsdPerL">—</td></tr>
-          <tr><td>Тоннаж машины (тонн)</td><td class="mono" id="t_truckTons">—</td><td class="mono">—</td></tr>
-          <tr><td>Курс доллара (AMD/$)</td><td class="mono" id="t_rate">—</td><td class="mono">—</td></tr>
-          <tr><td>Плотность (кг/л)</td><td class="mono" id="t_densityIn">—</td><td class="mono">—</td></tr>
+      <div class="scrollHint">На телефоне таблица листается по горизонтали.</div>
 
-          <tr class="section"><td colspan="3">Константы (скрытые в Excel)</td></tr>
-          <tr><td>Тип топлива</td><td class="mono" id="t_fuelName">—</td><td class="mono">—</td></tr>
-          <tr><td>Акциз (AMD/тонна)</td><td class="mono" id="t_exciseAmd">—</td><td class="mono" id="t_exciseUsd">—</td></tr>
-          <tr id="rowGasDiff" style="display:none">
-            <td>Разница до минимального платежа (НДС на (закупка+доставка) + базовый акциз − минимум)</td>
-            <td class="mono" id="t_gasDiffAmd">—</td>
-            <td class="mono" id="t_gasDiffUsd">—</td>
-          </tr>
-          <tr><td>Экологический налог (2% от закупка+доставка)</td><td class="mono" id="t_ecoAmd">—</td><td class="mono" id="t_ecoUsd">—</td></tr>
+      <div class="tableWrap" tabindex="0" aria-label="Таблица показателей (горизонтальный скролл)">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:52%">Показатель</th>
+              <th style="width:24%">AMD</th>
+              <th style="width:24%">USD</th>
+            </tr>
+          </thead>
 
-          <tr class="section"><td colspan="3">Расчёт на 1 тонну</td></tr>
-          <tr><td>База для НДС</td><td class="mono" id="t_vatBaseAmd">—</td><td class="mono" id="t_vatBaseUsd">—</td></tr>
-          <tr><td>НДС 20%</td><td class="mono" id="t_vatAmd">—</td><td class="mono" id="t_vatUsd">—</td></tr>
-          <tr><td>Итого затрат (закупка+доставка+акциз+эко+НДС)</td><td class="mono" id="t_totalCostTonAmd">—</td><td class="mono" id="t_totalCostTonUsd">—</td></tr>
-          <tr><td>Литров в тонне</td><td class="mono" id="t_litersPerTon">—</td><td class="mono">—</td></tr>
-          <tr><td>Себестоимость 1л</td><td class="mono" id="t_costPerLAmd">—</td><td class="mono" id="t_costPerLUsd">—</td></tr>
-          <tr><td>Маржа на 1л</td><td class="mono" id="t_marginPerLAmd">—</td><td class="mono" id="t_marginPerLUsd">—</td></tr>
-          <tr><td>Маржа % (маржа/себестоимость)</td><td class="mono" id="t_marginPct">—</td><td class="mono">—</td></tr>
+          <tbody>
+            <tr class="section"><td colspan="3">Входные данные (видимые)</td></tr>
+            <tr><td>Цена закупки ($/тонна)</td><td class="mono" id="t_purchaseAmd">—</td><td class="mono" id="t_purchaseUsd">—</td></tr>
+            <tr><td>Доставка ($/тонна)</td><td class="mono" id="t_deliveryAmd">—</td><td class="mono" id="t_deliveryUsd">—</td></tr>
+            <tr><td>Цена продажи (AMD/литр)</td><td class="mono" id="t_sellAmdPerL">—</td><td class="mono" id="t_sellUsdPerL">—</td></tr>
+            <tr><td>Тоннаж машины (тонн)</td><td class="mono" id="t_truckTons">—</td><td class="mono">—</td></tr>
+            <tr><td>Курс доллара (AMD/$)</td><td class="mono" id="t_rate">—</td><td class="mono">—</td></tr>
+            <tr><td>Плотность (кг/л)</td><td class="mono" id="t_densityIn">—</td><td class="mono">—</td></tr>
 
-          <tr class="section"><td colspan="3">Расчёт на 1 машину</td></tr>
-          <tr><td>Общий объём (л.)</td><td class="mono" id="t_totalLiters">—</td><td class="mono">—</td></tr>
-          <tr><td>НДС+Акциз+Э.Н. на весь объём</td><td class="mono" id="t_taxBlockAmd">—</td><td class="mono" id="t_taxBlockUsd">—</td></tr>
-          <tr><td>Себестоимость всего</td><td class="mono" id="t_totalCostTruckAmd">—</td><td class="mono" id="t_totalCostTruckUsd">—</td></tr>
-          <tr><td>Выручка (все литры)</td><td class="mono" id="t_revenueTruckAmd">—</td><td class="mono" id="t_revenueTruckUsd">—</td></tr>
+            <tr class="section"><td colspan="3">Константы (скрытые в Excel)</td></tr>
+            <tr><td>Тип топлива</td><td class="mono" id="t_fuelName">—</td><td class="mono">—</td></tr>
+            <tr><td>Акциз (AMD/тонна)</td><td class="mono" id="t_exciseAmd">—</td><td class="mono" id="t_exciseUsd">—</td></tr>
+            <tr id="rowGasDiff" style="display:none">
+              <td>Разница до минимального платежа (НДС на (закупка+доставка) + базовый акциз − минимум)</td>
+              <td class="mono" id="t_gasDiffAmd">—</td>
+              <td class="mono" id="t_gasDiffUsd">—</td>
+            </tr>
+            <tr><td>Экологический налог (2% от закупка+доставка)</td><td class="mono" id="t_ecoAmd">—</td><td class="mono" id="t_ecoUsd">—</td></tr>
 
-          <tr class="section"><td colspan="3">Доход / НДС / прибыль</td></tr>
-          <tr><td>Доход на 1 тонну (выручка − затраты)</td><td class="mono" id="t_incomeTonAmd">—</td><td class="mono" id="t_incomeTonUsd">—</td></tr>
-          <tr><td>Доход на 1 машину</td><td class="mono" id="t_incomeTruckAmd">—</td><td class="mono" id="t_incomeTruckUsd">—</td></tr>
-          <tr><td>Переплаченный НДС на 1 литр (НДС в цене − входной НДС)</td><td class="mono" id="t_overVatPerLAmd">—</td><td class="mono" id="t_overVatPerLUsd">—</td></tr>
-          <tr><td>Переплаченный НДС на 1 тонну</td><td class="mono" id="t_overVatPerTonAmd">—</td><td class="mono" id="t_overVatPerTonUsd">—</td></tr>
-          <tr><td>Прибыль (минус переплаченный НДС и фикс. расходы 260,000 AMD/машина)</td><td class="mono" id="t_profitAfterVatAmd">—</td><td class="mono" id="t_profitAfterVatUsd">—</td></tr>
-          <tr><td><b>Чистая прибыль при 18% налогов</b></td><td class="mono" id="t_netProfitAmd">—</td><td class="mono" id="t_netProfitUsd">—</td></tr>
-        </tbody>
-      </table>
+            <tr class="section"><td colspan="3">Расчёт на 1 тонну</td></tr>
+            <tr><td>База для НДС</td><td class="mono" id="t_vatBaseAmd">—</td><td class="mono" id="t_vatBaseUsd">—</td></tr>
+            <tr><td>НДС 20%</td><td class="mono" id="t_vatAmd">—</td><td class="mono" id="t_vatUsd">—</td></tr>
+            <tr><td>Итого затрат (закупка+доставка+акциз+эко+НДС)</td><td class="mono" id="t_totalCostTonAmd">—</td><td class="mono" id="t_totalCostTonUsd">—</td></tr>
+            <tr><td>Литров в тонне</td><td class="mono" id="t_litersPerTon">—</td><td class="mono">—</td></tr>
+            <tr><td>Себестоимость 1л</td><td class="mono" id="t_costPerLAmd">—</td><td class="mono" id="t_costPerLUsd">—</td></tr>
+            <tr><td>Маржа на 1л</td><td class="mono" id="t_marginPerLAmd">—</td><td class="mono" id="t_marginPerLUsd">—</td></tr>
+            <tr><td>Маржа % (маржа/себестоимость)</td><td class="mono" id="t_marginPct">—</td><td class="mono">—</td></tr>
+
+            <tr class="section"><td colspan="3">Расчёт на 1 машину</td></tr>
+            <tr><td>Общий объём (л.)</td><td class="mono" id="t_totalLiters">—</td><td class="mono">—</td></tr>
+            <tr><td>НДС+Акциз+Э.Н. на весь объём</td><td class="mono" id="t_taxBlockAmd">—</td><td class="mono" id="t_taxBlockUsd">—</td></tr>
+            <tr><td>Себестоимость всего</td><td class="mono" id="t_totalCostTruckAmd">—</td><td class="mono" id="t_totalCostTruckUsd">—</td></tr>
+            <tr><td>Выручка (все литры)</td><td class="mono" id="t_revenueTruckAmd">—</td><td class="mono" id="t_revenueTruckUsd">—</td></tr>
+
+            <tr class="section"><td colspan="3">Доход / НДС / прибыль</td></tr>
+            <tr><td>Доход на 1 тонну (выручка − затраты)</td><td class="mono" id="t_incomeTonAmd">—</td><td class="mono" id="t_incomeTonUsd">—</td></tr>
+            <tr><td>Доход на 1 машину</td><td class="mono" id="t_incomeTruckAmd">—</td><td class="mono" id="t_incomeTruckUsd">—</td></tr>
+            <tr><td>Переплаченный НДС на 1 литр (НДС в цене − входной НДС)</td><td class="mono" id="t_overVatPerLAmd">—</td><td class="mono" id="t_overVatPerLUsd">—</td></tr>
+            <tr><td>Переплаченный НДС на 1 тонну</td><td class="mono" id="t_overVatPerTonAmd">—</td><td class="mono" id="t_overVatPerTonUsd">—</td></tr>
+            <tr><td>Прибыль (минус переплаченный НДС и фикс. расходы 260,000 AMD/машина)</td><td class="mono" id="t_profitAfterVatAmd">—</td><td class="mono" id="t_profitAfterVatUsd">—</td></tr>
+            <tr><td><b>Чистая прибыль при 18% налогов</b></td><td class="mono" id="t_netProfitAmd">—</td><td class="mono" id="t_netProfitUsd">—</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -230,19 +275,8 @@
   const FIXED_PER_TRUCK_AMD = 260000;
 
   const fuels = {
-    DT: {
-      name: "Дизельное топливо (ДТ)",
-      density: 0.832,
-      exciseMode: "fixed",
-      exciseFixedAmd: 17608
-    },
-    AI92: {
-      name: "АИ‑92/95 Бензин",
-      density: 0.745,
-      exciseMode: "min_vat_excise",
-      baseExciseAmd: 54064,
-      minVatPlusExciseAmd: 167400
-    }
+    DT: { name: "Дизельное топливо (ДТ)", density: 0.832, exciseMode: "fixed", exciseFixedAmd: 17608 },
+    AI92: { name: "АИ‑92/95 Бензин", density: 0.745, exciseMode: "min_vat_excise", baseExciseAmd: 54064, minVatPlusExciseAmd: 167400 }
   };
 
   let currentFuel = "DT";
@@ -275,9 +309,9 @@
     const purchaseAmd = purchaseUsd * rate;
     const deliveryAmd = deliveryUsd * rate;
 
-    // Акциз
     let exciseAmd = 0;
     let gasDiffAmd = 0;
+
     if (f.exciseMode === "fixed") {
       exciseAmd = f.exciseFixedAmd;
     } else {
@@ -302,13 +336,10 @@
     const totalLiters = litersPerTon * truckTons;
 
     const taxBlockAmd = (vatAmd + exciseAmd + ecoAmd) * truckTons;
-    const totalCostTruckAmd = totalCostTonAmd * truckTons;
-    const revenueTruckAmd = sellAmdPerL * totalLiters;
 
     const incomeTonAmd = (sellAmdPerL * litersPerTon) - totalCostTonAmd;
     const incomeTruckAmd = incomeTonAmd * truckTons;
 
-    // НДС в цене продажи (цена продажи предполагается "с НДС")
     const outputVatPerLAmd = sellAmdPerL * VAT / (1 + VAT);
     const inputVatPerLAmd = vatAmd / litersPerTon;
 
@@ -323,7 +354,6 @@
     el("netProfitLine").innerHTML = `${fmtAmd0(netProfitAmd)} <small>(≈ ${fmtUsd2(toUsd(netProfitAmd))})</small>`;
     el("fuelInfo").textContent = `${f.name} • плотность ${fmtNum4(density)} кг/л • фикс. расходы ${fmtAmd0(FIXED_PER_TRUCK_AMD)}/машина`;
 
-    // Inputs
     el("t_purchaseAmd").textContent = fmtAmd0(purchaseAmd);
     el("t_purchaseUsd").textContent = fmtUsd2(purchaseUsd);
     el("t_deliveryAmd").textContent = fmtAmd0(deliveryAmd);
@@ -334,7 +364,6 @@
     el("t_rate").textContent = fmtNum4(rate);
     el("t_densityIn").textContent = fmtNum4(density);
 
-    // Constants
     el("t_fuelName").textContent = f.name;
     el("t_exciseAmd").textContent = fmtAmd0(exciseAmd);
     el("t_exciseUsd").textContent = fmtUsd2(toUsd(exciseAmd));
@@ -351,7 +380,6 @@
     el("t_ecoAmd").textContent = fmtAmd0(ecoAmd);
     el("t_ecoUsd").textContent = fmtUsd2(toUsd(ecoAmd));
 
-    // Per ton
     el("t_vatBaseAmd").textContent = fmtAmd0(vatBaseAmd);
     el("t_vatBaseUsd").textContent = fmtUsd2(toUsd(vatBaseAmd));
     el("t_vatAmd").textContent = fmtAmd0(vatAmd);
@@ -367,16 +395,19 @@
     el("t_marginPerLUsd").textContent = `${fmtNum4(toUsd(marginPerLAmd))} $/л`;
     el("t_marginPct").textContent = `${fmtNum2(marginPct * 100)}%`;
 
-    // Per truck
     el("t_totalLiters").textContent = fmtNum4(totalLiters);
+
     el("t_taxBlockAmd").textContent = fmtAmd0(taxBlockAmd);
     el("t_taxBlockUsd").textContent = fmtUsd2(toUsd(taxBlockAmd));
+
+    const totalCostTruckAmd = totalCostTonAmd * truckTons;
+    const revenueTruckAmd = sellAmdPerL * totalLiters;
+
     el("t_totalCostTruckAmd").textContent = fmtAmd0(totalCostTruckAmd);
     el("t_totalCostTruckUsd").textContent = fmtUsd2(toUsd(totalCostTruckAmd));
     el("t_revenueTruckAmd").textContent = fmtAmd0(revenueTruckAmd);
     el("t_revenueTruckUsd").textContent = fmtUsd2(toUsd(revenueTruckAmd));
 
-    // Income / VAT / profit
     el("t_incomeTonAmd").textContent = fmtAmd0(incomeTonAmd);
     el("t_incomeTonUsd").textContent = fmtUsd2(toUsd(incomeTonAmd));
     el("t_incomeTruckAmd").textContent = fmtAmd0(incomeTruckAmd);
@@ -403,7 +434,7 @@
       document.querySelectorAll(".tabbtn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       currentFuel = btn.dataset.fuel;
-      el("density").value = fuels[currentFuel].density; // дефолт по вкладке
+      el("density").value = fuels[currentFuel].density;
       calc();
     });
   });
