@@ -221,7 +221,7 @@
           </thead>
 
           <tbody>
-            <tr class="section"><td colspan="3">Входные данные (видимые)</td></tr>
+            <tr class="section"><td colspan="3">Входные данные</td></tr>
             <tr><td>Цена закупки ($/тонна)</td><td class="mono" id="t_purchaseAmd">—</td><td class="mono" id="t_purchaseUsd">—</td></tr>
             <tr><td>Доставка ($/тонна)</td><td class="mono" id="t_deliveryAmd">—</td><td class="mono" id="t_deliveryUsd">—</td></tr>
             <tr><td>Цена продажи (AMD/литр)</td><td class="mono" id="t_sellAmdPerL">—</td><td class="mono" id="t_sellUsdPerL">—</td></tr>
@@ -352,7 +352,7 @@
     const toUsd = (amd) => amd / rate;
 
     el("netProfitLine").innerHTML = `${fmtAmd0(netProfitAmd)} <small>(≈ ${fmtUsd2(toUsd(netProfitAmd))})</small>`;
-    el("fuelInfo").textContent = `${f.name} • плотность ${fmtNum4(density)} кг/л • фикс. расходы ${fmtAmd0(FIXED_PER_TRUCK_AMD)}/машина`;
+    el("fuelInfo").textContent = `${f.name} • плотность ${fmtNum4(density)} кг/л`;
 
     el("t_purchaseAmd").textContent = fmtAmd0(purchaseAmd);
     el("t_purchaseUsd").textContent = fmtUsd2(purchaseUsd);
