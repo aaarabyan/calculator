@@ -154,6 +154,12 @@
       td, th { padding: 10px 8px; }
       table { min-width: 720px; }
     }
+
+    /* Главная строка сверху на мобильных (вариант 1) */
+    @media (max-width: 900px){
+      .mainRow .summary { order: -1; }
+      .mainRow .inputs  { order: 0; }
+    }
   </style>
 </head>
 
@@ -161,7 +167,7 @@
   <div class="wrap">
     <h1>Калькулятор маржинальности топлива</h1>
 
-    <div class="row">
+    <div class="row mainRow">
       <div class="card inputs">
         <div class="tabs">
           <button class="tabbtn active" data-fuel="DT">ДТ</button>
