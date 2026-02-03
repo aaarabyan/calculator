@@ -364,28 +364,29 @@
     /* iPhone optimization */
     @media (max-width: 600px) {
       .wrap {
-        padding: 16px 12px 32px;
-        padding-top: calc(20px + env(safe-area-inset-top));
-        padding-bottom: calc(32px + env(safe-area-inset-bottom));
+        padding: 12px 10px 24px;
+        padding-top: calc(12px + env(safe-area-inset-top));
+        padding-bottom: calc(24px + env(safe-area-inset-bottom));
       }
 
       .header {
-        margin-bottom: 16px;
+        margin-bottom: 10px;
       }
 
       .header-icon {
-        width: 36px;
-        height: 36px;
-        font-size: 18px;
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        border-radius: 10px;
       }
 
       h1 {
-        font-size: 17px;
+        font-size: 15px;
       }
 
       .card {
-        padding: 16px;
-        border-radius: 16px;
+        padding: 12px;
+        border-radius: 14px;
       }
 
       .tabs {
@@ -395,64 +396,67 @@
 
       .tabbtn {
         flex: 1;
-        padding: 14px 12px;
-        font-size: 15px;
-        min-height: 48px;
+        padding: 10px 8px;
+        font-size: 14px;
+        min-height: 40px;
       }
 
       .input-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
       }
 
       label {
-        font-size: 11px;
-        margin-bottom: 6px;
+        font-size: 10px;
+        margin-bottom: 4px;
       }
 
       input {
-        padding: 16px 14px;
-        font-size: 17px;
-        border-radius: 14px;
-        min-height: 52px;
+        padding: 12px 10px;
+        font-size: 16px;
+        border-radius: 10px;
+        min-height: 44px;
       }
 
       .summary-header {
-        font-size: 11px;
+        font-size: 10px;
+        margin-bottom: 8px;
+      }
+
+      .profit-display {
+        padding: 12px 0;
       }
 
       .profit-value {
-        font-size: 28px;
+        font-size: 24px;
       }
 
       .profit-usd {
-        font-size: 13px;
-      }
-
-      .fuel-badge {
-        font-size: 11px;
-        padding: 6px 12px;
-        margin-top: 12px;
-      }
-
-      .profit-indicator {
-        margin-top: 16px;
-      }
-
-
-
-      td,
-      th {
-        padding: 12px 10px;
         font-size: 12px;
       }
 
-      th {
+      .fuel-badge {
         font-size: 10px;
+        padding: 5px 10px;
+        margin-top: 8px;
+      }
+
+      .profit-indicator {
+        margin-top: 12px;
+      }
+
+      td,
+      th {
+        padding: 10px 8px;
+        font-size: 11px;
+      }
+
+      th {
+        font-size: 9px;
       }
 
       .row {
-        gap: 12px;
+        gap: 10px;
       }
     }
 
