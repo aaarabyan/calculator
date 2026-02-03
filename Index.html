@@ -10,211 +10,444 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Fuel Calc" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#070b12" />
+  <meta name="theme-color" content="#0a0f1a" />
 
   <title>Калькулятор маржинальности топлива</title>
 
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg:#070b12;
-      --card:#0f172a;
-      --card2:#0b1222;
-      --text:#e6edf7;
-      --muted:#a6b2c3;
-      --line:#22314a;
-      --accent:#22c55e;
-      --accent2:#38bdf8;
-      --input:#0a1326;
+      --bg: #0a0f1a;
+      --card: rgba(15, 23, 42, 0.85);
+      --card-border: rgba(56, 189, 248, 0.15);
+      --card-glow: rgba(34, 197, 94, 0.08);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --line: rgba(148, 163, 184, 0.12);
+      --accent: #22c55e;
+      --accent-glow: rgba(34, 197, 94, 0.25);
+      --blue: #38bdf8;
+      --blue-glow: rgba(56, 189, 248, 0.2);
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --red: #ef4444;
+      --red-glow: rgba(239, 68, 68, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     html, body {
-      margin:0;
-      padding:0;
-      width:100%;
-      max-width:100%;
-      overflow-x:hidden; /* чтобы страница не уезжала вправо */
-      background: radial-gradient(1200px 600px at 20% 0%, rgba(56,189,248,.10), transparent 60%),
-                  radial-gradient(900px 500px at 80% 10%, rgba(34,197,94,.10), transparent 55%),
-                  var(--bg);
-      color:var(--text);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      background: 
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(56, 189, 248, 0.12), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 80% 0%, rgba(34, 197, 94, 0.1), transparent 45%),
+        var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
       -webkit-text-size-adjust: 100%;
+      line-height: 1.5;
     }
 
-    .wrap { max-width: 1100px; margin: 20px auto; padding: 0 14px 40px; }
-    h1 { font-size: 20px; margin: 0 0 12px; }
+    .wrap {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
 
-    .row { display:flex; gap:12px; flex-wrap:wrap; }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .header-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--blue));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(135deg, var(--text), var(--muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
 
     .card {
-      background: linear-gradient(180deg, rgba(255,255,255,.02), transparent 35%) , var(--card);
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      max-width:100%;
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 
+        0 4px 24px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+      transition: border-color 0.3s ease;
     }
 
-    .inputs { flex: 1 1 520px; }
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.25);
+    }
+
+    .inputs { flex: 1 1 560px; }
     .summary { flex: 1 1 320px; }
 
-    .tabs { display:flex; gap:8px; margin-top: 6px; }
-    .tabbtn {
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      background: var(--card2);
-      color:var(--text);
-      cursor:pointer;
-      font-size: 15px;
-      min-height: 44px;
-    }
-    .tabbtn.active {
-      border-color: rgba(34,197,94,.65);
-      box-shadow: 0 0 0 2px rgba(34,197,94,.18) inset;
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding: 4px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 14px;
+      width: fit-content;
     }
 
-    label { display:block; font-size: 13px; color: var(--muted); margin: 12px 0 7px; }
+    .tabbtn {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.25s ease;
+    }
+
+    .tabbtn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tabbtn.active {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(56, 189, 248, 0.15));
+      color: var(--text);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
     input {
       width: 100%;
-      padding: 14px 12px;
-      border-radius:12px;
-      border:1px solid rgba(56,189,248,.25);
-      background: var(--input);
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--input-bg);
       color: var(--text);
-      outline:none;
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      min-height: 48px;
-      box-sizing: border-box;
+      outline: none;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.25s ease;
     }
+
+    input:hover {
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
     input:focus {
-      border-color: rgba(34,197,94,.85);
-      box-shadow: 0 0 0 3px rgba(34,197,94,.20);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
-    .headline { font-size: 14px; color: var(--muted); margin: 0 0 6px; }
-    .profit { font-size: 24px; margin:0; }
-    .profit small { color: var(--muted); font-size: 12px; font-weight: 500; }
-
-    .note { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.4; }
-    .mono { font-variant-numeric: tabular-nums; }
-
-    /* ВАЖНО: мобильная таблица */
-    .tableWrap{
-      width:100%;
-      max-width:100%;
-      overflow-x:auto;
-      -webkit-overflow-scrolling: touch; /* плавный скролл на iOS */
-      border-radius: 14px;
-      border:1px solid var(--line);
-      background: rgba(0,0,0,.08);
+    .summary-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
-    .scrollHint{
-      display:none;
+    .summary-header {
       font-size: 12px;
+      font-weight: 600;
       color: var(--muted);
-      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .profit-display {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 24px 0;
+    }
+
+    .profit-value {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0;
+      transition: color 0.3s ease;
+    }
+
+    .profit-value.positive {
+      color: var(--accent);
+      text-shadow: 0 0 30px var(--accent-glow);
+    }
+
+    .profit-value.negative {
+      color: var(--red);
+      text-shadow: 0 0 30px var(--red-glow);
+    }
+
+    .profit-usd {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .fuel-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--blue);
+      margin-top: 16px;
+    }
+
+    .profit-indicator {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .profit-bar {
+      height: 100%;
+      border-radius: 2px;
+      transition: all 0.4s ease;
+      width: 50%;
+    }
+
+    .profit-bar.positive {
+      background: linear-gradient(90deg, var(--accent), #4ade80);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .profit-bar.negative {
+      background: linear-gradient(90deg, var(--red), #f87171);
+      box-shadow: 0 0 10px var(--red-glow);
+    }
+
+    .note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 16px;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      border-left: 3px solid var(--blue);
+    }
+
+    .tableWrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .scrollHint {
+      display: none;
+      font-size: 11px;
+      color: var(--muted);
+      margin: 0 0 10px;
+      padding: 8px 12px;
+      background: rgba(56, 189, 248, 0.1);
+      border-radius: 8px;
+      text-align: center;
     }
 
     table {
-      width:100%;
+      width: 100%;
       border-collapse: collapse;
-      min-width: 760px; /* чтобы на телефоне уходило в скролл, а не ломало вёрстку */
+      min-width: 720px;
       background: transparent;
     }
 
-    th, td { padding: 11px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    th, td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
     th {
-      text-align:left;
-      font-size:12px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
       color: var(--muted);
-      background: var(--card2);
+      background: rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
       position: sticky;
-      top:0;
+      top: 0;
       z-index: 1;
+    }
+
+    td {
+      font-size: 13px;
       white-space: nowrap;
     }
-    td { font-size: 13px; white-space: nowrap; }
 
     tr.section td {
-      background: rgba(56,189,248,.06);
-      color: rgba(230,237,247,.85);
-      font-weight:700;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.08), transparent);
+      color: var(--blue);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
       white-space: normal;
     }
 
-    /* Мелкие улучшения под телефон */
-    @media (max-width: 520px){
-      .wrap { padding: 0 12px 32px; }
-      .profit { font-size: 22px; }
-      .scrollHint { display:block; }
-      td, th { padding: 10px 8px; }
-      table { min-width: 720px; }
+    .mono {
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
     }
 
-    /* Итого сверху на мобильных (вариант 1) */
-    @media (max-width: 900px){
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    @media (max-width: 600px) {
+      .wrap { padding: 16px 12px 32px; }
+      h1 { font-size: 18px; }
+      .profit-value { font-size: 26px; }
+      .scrollHint { display: block; }
+      td, th { padding: 12px 10px; }
+      .input-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    }
+
+    @media (max-width: 900px) {
       .mainRow .summary { order: -1; }
-      .mainRow .inputs  { order: 0; }
+      .mainRow .inputs { order: 0; }
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <h1>Калькулятор маржинальности топлива</h1>
+    <div class="header">
+      <div class="header-icon">⛽</div>
+      <h1>Калькулятор маржинальности топлива</h1>
+    </div>
 
     <div class="row mainRow">
       <div class="card inputs">
         <div class="tabs">
-          <button class="tabbtn active" data-fuel="DT">ДТ</button>
+          <button class="tabbtn active" data-fuel="DT">Дизель</button>
           <button class="tabbtn" data-fuel="AI92">АИ‑92/95</button>
         </div>
 
-        <div class="row" style="margin-top:10px">
-          <div style="flex:1 1 220px">
+        <div class="input-grid">
+          <div class="input-group">
             <label>Цена закупки ($/тонна)</label>
             <input id="purchaseUsd" type="number" inputmode="decimal" step="0.01" value="750" />
           </div>
-          <div style="flex:1 1 220px">
+          <div class="input-group">
             <label>Доставка ($/тонна)</label>
             <input id="deliveryUsd" type="number" inputmode="decimal" step="0.01" value="80" />
           </div>
-          <div style="flex:1 1 220px">
+          <div class="input-group">
+            <label>Пошлина ($/тонна)</label>
+            <input id="customsDutyUsd" type="number" inputmode="decimal" step="0.01" value="0" />
+          </div>
+          <div class="input-group">
             <label>Цена продажи (AMD/литр)</label>
             <input id="sellAmdPerL" type="number" inputmode="decimal" step="0.01" value="370" />
           </div>
-          <div style="flex:1 1 220px">
-            <label>Тоннаж в одной машине (тонн)</label>
+          <div class="input-group">
+            <label>Тоннаж машины (тонн)</label>
             <input id="truckTons" type="number" inputmode="decimal" step="0.01" value="25" />
           </div>
-          <div style="flex:1 1 220px">
+          <div class="input-group">
             <label>Курс доллара (AMD/$)</label>
             <input id="usdRate" type="number" inputmode="decimal" step="0.0001" value="384" />
           </div>
-          <div style="flex:1 1 220px">
+          <div class="input-group">
             <label>Плотность (кг/л)</label>
             <input id="density" type="number" inputmode="decimal" step="0.0001" value="0.845" />
           </div>
         </div>
 
         <div class="note">
-          Константы: НДС 20%, эконалог 2%.
+          <strong>Константы:</strong> НДС 20%, ЭкоНалог 2%, Налог на прибыль 18%. Расходы на брокера/пробы: 260 000 AMD/машина.
         </div>
       </div>
 
       <div class="card summary">
-        <p class="headline">Итого</p>
-        <p class="profit" id="netProfitLine">—</p>
-        <p class="muted" id="fuelInfo" style="margin:10px 0 0">—</p>
+        <div class="summary-card">
+          <div class="summary-header">Чистая прибыль на машину</div>
+          <div class="profit-display">
+            <p class="profit-value positive" id="netProfitValue">—</p>
+            <p class="profit-usd" id="netProfitUsd">—</p>
+            <div class="fuel-badge" id="fuelInfo">
+              <span>⛽</span>
+              <span id="fuelName">—</span>
+            </div>
+          </div>
+          <div class="profit-indicator">
+            <div class="profit-bar positive" id="profitBar"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="card" style="margin-top:12px">
-      <div class="scrollHint"></div>
+    <div class="card" style="margin-top: 16px">
+      <div class="scrollHint">👆 Прокрутите таблицу влево-вправо</div>
 
       <div class="tableWrap" tabindex="0" aria-label="Таблица показателей">
         <table>
@@ -230,43 +463,45 @@
             <tr class="section"><td colspan="3">Входные данные</td></tr>
             <tr><td>Цена закупки ($/тонна)</td><td class="mono" id="t_purchaseAmd">—</td><td class="mono" id="t_purchaseUsd">—</td></tr>
             <tr><td>Доставка ($/тонна)</td><td class="mono" id="t_deliveryAmd">—</td><td class="mono" id="t_deliveryUsd">—</td></tr>
+            <tr><td>Пошлина ($/тонна)</td><td class="mono" id="t_customsDutyAmd">—</td><td class="mono" id="t_customsDutyUsd">—</td></tr>
             <tr><td>Цена продажи (AMD/литр)</td><td class="mono" id="t_sellAmdPerL">—</td><td class="mono" id="t_sellUsdPerL">—</td></tr>
             <tr><td>Тоннаж машины (тонн)</td><td class="mono" id="t_truckTons">—</td><td class="mono">—</td></tr>
             <tr><td>Курс доллара (AMD/$)</td><td class="mono" id="t_rate">—</td><td class="mono">—</td></tr>
             <tr><td>Плотность (кг/л)</td><td class="mono" id="t_densityIn">—</td><td class="mono">—</td></tr>
 
-            <tr class="section"><td colspan="3">Константы</td></tr>
+            <tr class="section"><td colspan="3">Налоги и сборы</td></tr>
             <tr><td>Тип топлива</td><td class="mono" id="t_fuelName">—</td><td class="mono">—</td></tr>
             <tr><td>Акциз (AMD/тонна)</td><td class="mono" id="t_exciseAmd">—</td><td class="mono" id="t_exciseUsd">—</td></tr>
             <tr id="rowGasDiff" style="display:none">
-              <td>Разница до минимального платежа (НДС на (закупка+доставка) + базовый акциз − минимум)</td>
+              <td>Разница до минимального платежа</td>
               <td class="mono" id="t_gasDiffAmd">—</td>
               <td class="mono" id="t_gasDiffUsd">—</td>
             </tr>
-            <tr><td>Экологический налог (2% от закупка+доставка)</td><td class="mono" id="t_ecoAmd">—</td><td class="mono" id="t_ecoUsd">—</td></tr>
+            <tr><td>Экологический налог (2%)</td><td class="mono" id="t_ecoAmd">—</td><td class="mono" id="t_ecoUsd">—</td></tr>
+            <tr><td>Пошлина</td><td class="mono" id="t_customsDutyTableAmd">—</td><td class="mono" id="t_customsDutyTableUsd">—</td></tr>
 
             <tr class="section"><td colspan="3">Расчёт на 1 тонну</td></tr>
-            <tr><td>База для НДС</td><td class="mono" id="t_vatBaseAmd">—</td><td class="mono" id="t_vatBaseUsd">—</td></tr>
+            <tr><td>База для НДС (закупка+доставка+акциз)</td><td class="mono" id="t_vatBaseAmd">—</td><td class="mono" id="t_vatBaseUsd">—</td></tr>
             <tr><td>НДС 20%</td><td class="mono" id="t_vatAmd">—</td><td class="mono" id="t_vatUsd">—</td></tr>
-            <tr><td>Итого затрат (закупка+доставка+акциз+эко+НДС)</td><td class="mono" id="t_totalCostTonAmd">—</td><td class="mono" id="t_totalCostTonUsd">—</td></tr>
+            <tr><td>Итого затрат на тонну</td><td class="mono" id="t_totalCostTonAmd">—</td><td class="mono" id="t_totalCostTonUsd">—</td></tr>
             <tr><td>Литров в тонне</td><td class="mono" id="t_litersPerTon">—</td><td class="mono">—</td></tr>
             <tr><td>Себестоимость 1л</td><td class="mono" id="t_costPerLAmd">—</td><td class="mono" id="t_costPerLUsd">—</td></tr>
             <tr><td>Маржа на 1л</td><td class="mono" id="t_marginPerLAmd">—</td><td class="mono" id="t_marginPerLUsd">—</td></tr>
-            <tr><td>Маржа % (маржа/себестоимость)</td><td class="mono" id="t_marginPct">—</td><td class="mono">—</td></tr>
+            <tr><td>Маржа %</td><td class="mono" id="t_marginPct">—</td><td class="mono">—</td></tr>
 
             <tr class="section"><td colspan="3">Расчёт на 1 машину</td></tr>
             <tr><td>Общий объём (л.)</td><td class="mono" id="t_totalLiters">—</td><td class="mono">—</td></tr>
-            <tr><td>НДС+Акциз+Э.Н. на весь объём</td><td class="mono" id="t_taxBlockAmd">—</td><td class="mono" id="t_taxBlockUsd">—</td></tr>
+            <tr><td>НДС+Акциз+ЭН+Пошлина на весь объём</td><td class="mono" id="t_taxBlockAmd">—</td><td class="mono" id="t_taxBlockUsd">—</td></tr>
             <tr><td>Себестоимость всего</td><td class="mono" id="t_totalCostTruckAmd">—</td><td class="mono" id="t_totalCostTruckUsd">—</td></tr>
             <tr><td>Выручка (все литры)</td><td class="mono" id="t_revenueTruckAmd">—</td><td class="mono" id="t_revenueTruckUsd">—</td></tr>
 
             <tr class="section"><td colspan="3">Доход / НДС / прибыль</td></tr>
-            <tr><td>Доход на 1 тонну (выручка − затраты)</td><td class="mono" id="t_incomeTonAmd">—</td><td class="mono" id="t_incomeTonUsd">—</td></tr>
+            <tr><td>Доход на 1 тонну</td><td class="mono" id="t_incomeTonAmd">—</td><td class="mono" id="t_incomeTonUsd">—</td></tr>
             <tr><td>Доход на 1 машину</td><td class="mono" id="t_incomeTruckAmd">—</td><td class="mono" id="t_incomeTruckUsd">—</td></tr>
-            <tr><td>Переплаченный НДС на 1 литр (НДС в цене − входной НДС)</td><td class="mono" id="t_overVatPerLAmd">—</td><td class="mono" id="t_overVatPerLUsd">—</td></tr>
+            <tr><td>Переплаченный НДС на 1 литр</td><td class="mono" id="t_overVatPerLAmd">—</td><td class="mono" id="t_overVatPerLUsd">—</td></tr>
             <tr><td>Переплаченный НДС на 1 тонну</td><td class="mono" id="t_overVatPerTonAmd">—</td><td class="mono" id="t_overVatPerTonUsd">—</td></tr>
-            <tr><td>Прибыль</td><td class="mono" id="t_profitAfterVatAmd">—</td><td class="mono" id="t_profitAfterVatUsd">—</td></tr>
-            <tr><td><b>Чистая прибыль при 18% налогов</b></td><td class="mono" id="t_netProfitAmd">—</td><td class="mono" id="t_netProfitUsd">—</td></tr>
+            <tr><td>Прибыль до налогов</td><td class="mono" id="t_profitAfterVatAmd">—</td><td class="mono" id="t_profitAfterVatUsd">—</td></tr>
+            <tr><td><b>Чистая прибыль (18% налог)</b></td><td class="mono" id="t_netProfitAmd">—</td><td class="mono" id="t_netProfitUsd">—</td></tr>
           </tbody>
         </table>
       </div>
@@ -281,7 +516,7 @@
   const FIXED_PER_TRUCK_AMD = 260000;
 
   const fuels = {
-    DT: { name: "Дизельное топливо (ДТ)", density: 0.845, exciseMode: "fixed", exciseFixedAmd: 17608 },
+    DT: { name: "Дизельное топливо", density: 0.845, exciseMode: "fixed", exciseFixedAmd: 17608 },
     AI92: { name: "АИ‑92/95 Бензин", density: 0.745, exciseMode: "min_vat_excise", baseExciseAmd: 54064, minVatPlusExciseAmd: 167400 }
   };
 
@@ -305,15 +540,17 @@
   function calc() {
     const purchaseUsd = num(el("purchaseUsd").value);
     const deliveryUsd = num(el("deliveryUsd").value);
+    const customsDutyUsd = num(el("customsDutyUsd").value);
     const sellAmdPerL = num(el("sellAmdPerL").value);
     const truckTons = num(el("truckTons").value);
     const rate = Math.max(0.0000001, num(el("usdRate").value));
     const f = fuels[currentFuel];
 
-    const density = Math.max(0.0000001, num(el("density").value)); // кг/л
+    const density = Math.max(0.0000001, num(el("density").value));
 
     const purchaseAmd = purchaseUsd * rate;
     const deliveryAmd = deliveryUsd * rate;
+    const customsDutyAmd = customsDutyUsd * rate;
 
     let exciseAmd = 0;
     let gasDiffAmd = 0;
@@ -328,10 +565,12 @@
 
     const ecoAmd = (purchaseAmd + deliveryAmd) * ECO;
 
+    // База для НДС: закупка + доставка + акциз (пошлина и эконалог НЕ входят)
     const vatBaseAmd = purchaseAmd + deliveryAmd + exciseAmd;
     const vatAmd = vatBaseAmd * VAT;
 
-    const totalCostTonAmd = purchaseAmd + deliveryAmd + exciseAmd + ecoAmd + vatAmd;
+    // Итого затрат: закупка + доставка + акциз + эконалог + пошлина + НДС
+    const totalCostTonAmd = purchaseAmd + deliveryAmd + exciseAmd + ecoAmd + customsDutyAmd + vatAmd;
 
     const litersPerTon = 1000 / density;
     const costPerLAmd = totalCostTonAmd / litersPerTon;
@@ -341,7 +580,8 @@
 
     const totalLiters = litersPerTon * truckTons;
 
-    const taxBlockAmd = (vatAmd + exciseAmd + ecoAmd) * truckTons;
+    // Налоговый блок теперь включает пошлину
+    const taxBlockAmd = (vatAmd + exciseAmd + ecoAmd + customsDutyAmd) * truckTons;
 
     const incomeTonAmd = (sellAmdPerL * litersPerTon) - totalCostTonAmd;
     const incomeTruckAmd = incomeTonAmd * truckTons;
@@ -357,13 +597,37 @@
 
     const toUsd = (amd) => amd / rate;
 
-    el("netProfitLine").innerHTML = `${fmtAmd0(netProfitAmd)} <small>(≈ ${fmtUsd2(toUsd(netProfitAmd))})</small>`;
-    el("fuelInfo").textContent = `${f.name} • плотность ${fmtNum4(density)} кг/л`;
+    // Update summary
+    const profitEl = el("netProfitValue");
+    const profitBar = el("profitBar");
+    profitEl.textContent = fmtAmd0(netProfitAmd);
+    el("netProfitUsd").textContent = `≈ ${fmtUsd2(toUsd(netProfitAmd))}`;
+    
+    if (netProfitAmd >= 0) {
+      profitEl.classList.remove("negative");
+      profitEl.classList.add("positive");
+      profitBar.classList.remove("negative");
+      profitBar.classList.add("positive");
+      const barWidth = Math.min(100, 50 + (netProfitAmd / 10000));
+      profitBar.style.width = barWidth + "%";
+    } else {
+      profitEl.classList.remove("positive");
+      profitEl.classList.add("negative");
+      profitBar.classList.remove("positive");
+      profitBar.classList.add("negative");
+      const barWidth = Math.max(5, 50 + (netProfitAmd / 10000));
+      profitBar.style.width = barWidth + "%";
+    }
 
+    el("fuelName").textContent = `${f.name} • ${fmtNum4(density)} кг/л`;
+
+    // Table data
     el("t_purchaseAmd").textContent = fmtAmd0(purchaseAmd);
     el("t_purchaseUsd").textContent = fmtUsd2(purchaseUsd);
     el("t_deliveryAmd").textContent = fmtAmd0(deliveryAmd);
     el("t_deliveryUsd").textContent = fmtUsd2(deliveryUsd);
+    el("t_customsDutyAmd").textContent = fmtAmd0(customsDutyAmd);
+    el("t_customsDutyUsd").textContent = fmtUsd2(customsDutyUsd);
     el("t_sellAmdPerL").textContent = `${fmtNum2(sellAmdPerL)} AMD/л`;
     el("t_sellUsdPerL").textContent = `${fmtNum4(toUsd(sellAmdPerL))} $/л`;
     el("t_truckTons").textContent = fmtNum2(truckTons);
@@ -385,6 +649,8 @@
 
     el("t_ecoAmd").textContent = fmtAmd0(ecoAmd);
     el("t_ecoUsd").textContent = fmtUsd2(toUsd(ecoAmd));
+    el("t_customsDutyTableAmd").textContent = fmtAmd0(customsDutyAmd);
+    el("t_customsDutyTableUsd").textContent = fmtUsd2(customsDutyUsd);
 
     el("t_vatBaseAmd").textContent = fmtAmd0(vatBaseAmd);
     el("t_vatBaseUsd").textContent = fmtUsd2(toUsd(vatBaseAmd));
@@ -431,7 +697,7 @@
     el("t_netProfitUsd").textContent = fmtUsd2(toUsd(netProfitAmd));
   }
 
-  ["purchaseUsd","deliveryUsd","sellAmdPerL","truckTons","usdRate","density"].forEach(id => {
+  ["purchaseUsd", "deliveryUsd", "customsDutyUsd", "sellAmdPerL", "truckTons", "usdRate", "density"].forEach(id => {
     el(id).addEventListener("input", calc);
   });
 
