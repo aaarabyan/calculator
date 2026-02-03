@@ -533,6 +533,10 @@
             <input id="truckTons" type="number" inputmode="decimal" step="0.01" value="25" />
           </div>
           <div class="input-group">
+            <label>Литраж машины (литров)</label>
+            <input id="truckLiters" type="number" inputmode="decimal" step="1" value="29586" />
+          </div>
+          <div class="input-group">
             <label>Курс доллара (AMD/$)</label>
             <input id="usdRate" type="number" inputmode="decimal" step="0.0001" value="384" />
           </div>
@@ -935,8 +939,34 @@
         el("t_netProfitUsd").textContent = fmtUsd2(toUsd(netProfitAmd));
       }
 
-      ["purchaseUsd", "deliveryUsd", "customsDutyUsd", "sellAmdPerL", "truckTons", "usdRate", "density"].forEach(id => {
+      ["purchaseUsd", "deliveryUsd", "customsDutyUsd", "sellAmdPerL", "usdRate", "density"].forEach(id => {
         el(id).addEventListener("input", calc);
+      });
+
+      // Bidirectional sync: Тоннаж <-> Литраж
+      el("truckTons").addEventListener("input", function () {
+        const density = Math.max(0.0000001, num(el("density").value));
+        const tons = num(this.value);
+        const litersPerTon = 1000 / density;
+        el("truckLiters").value = Math.round(tons * litersPerTon);
+        calc();
+      });
+
+      el("truckLiters").addEventListener("input", function () {
+        const density = Math.max(0.0000001, num(el("density").value));
+        const liters = num(this.value);
+        const litersPerTon = 1000 / density;
+        el("truckTons").value = (liters / litersPerTon).toFixed(2);
+        calc();
+      });
+
+      el("density").addEventListener("input", function () {
+        // When density changes, update liters based on current tons
+        const density = Math.max(0.0000001, num(this.value));
+        const tons = num(el("truckTons").value);
+        const litersPerTon = 1000 / density;
+        el("truckLiters").value = Math.round(tons * litersPerTon);
+        calc();
       });
 
       document.querySelectorAll(".tabbtn").forEach(btn => {
@@ -945,11 +975,20 @@
           btn.classList.add("active");
           currentFuel = btn.dataset.fuel;
           el("density").value = fuels[currentFuel].density;
+          // Update liters when fuel type changes
+          const density = fuels[currentFuel].density;
+          const tons = num(el("truckTons").value);
+          const litersPerTon = 1000 / density;
+          el("truckLiters").value = Math.round(tons * litersPerTon);
           calc();
         });
       });
 
-      el("density").value = fuels[currentFuel].density;
+      // Initialize liters based on default values
+      const initDensity = fuels[currentFuel].density;
+      el("density").value = initDensity;
+      const initTons = num(el("truckTons").value);
+      el("truckLiters").value = Math.round(initTons * (1000 / initDensity));
       calc();
     })();
   </script>
