@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ru">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -41,13 +42,14 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       padding: 0;
       width: 100%;
       max-width: 100%;
       overflow-x: hidden;
-      background: 
+      background:
         radial-gradient(ellipse 80% 50% at 20% -10%, rgba(56, 189, 248, 0.12), transparent 50%),
         radial-gradient(ellipse 60% 40% at 80% 0%, rgba(34, 197, 94, 0.1), transparent 45%),
         var(--bg);
@@ -104,7 +106,7 @@
       border: 1px solid var(--card-border);
       border-radius: 20px;
       padding: 20px;
-      box-shadow: 
+      box-shadow:
         0 4px 24px rgba(0, 0, 0, 0.2),
         0 0 0 1px rgba(255, 255, 255, 0.03) inset;
       transition: border-color 0.3s ease;
@@ -114,8 +116,13 @@
       border-color: rgba(56, 189, 248, 0.25);
     }
 
-    .inputs { flex: 1 1 560px; }
-    .summary { flex: 1 1 320px; }
+    .inputs {
+      flex: 1 1 560px;
+    }
+
+    .summary {
+      flex: 1 1 320px;
+    }
 
     .tabs {
       display: flex;
@@ -319,7 +326,8 @@
       background: transparent;
     }
 
-    th, td {
+    th,
+    td {
       padding: 14px 12px;
       border-bottom: 1px solid var(--line);
       vertical-align: middle;
@@ -362,18 +370,135 @@
       background: rgba(255, 255, 255, 0.02);
     }
 
+    /* iPhone optimization */
     @media (max-width: 600px) {
-      .wrap { padding: 16px 12px 32px; }
-      h1 { font-size: 18px; }
-      .profit-value { font-size: 26px; }
-      .scrollHint { display: block; }
-      td, th { padding: 12px 10px; }
-      .input-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .wrap {
+        padding: 16px 12px 32px;
+        padding-bottom: calc(32px + env(safe-area-inset-bottom));
+      }
+
+      .header {
+        margin-bottom: 16px;
+      }
+
+      .header-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+      }
+
+      h1 {
+        font-size: 17px;
+      }
+
+      .card {
+        padding: 16px;
+        border-radius: 16px;
+      }
+
+      .tabs {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .tabbtn {
+        flex: 1;
+        padding: 14px 12px;
+        font-size: 15px;
+        min-height: 48px;
+      }
+
+      .input-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      label {
+        font-size: 11px;
+        margin-bottom: 6px;
+      }
+
+      input {
+        padding: 16px 14px;
+        font-size: 17px;
+        border-radius: 14px;
+        min-height: 52px;
+      }
+
+      .summary-header {
+        font-size: 11px;
+      }
+
+      .profit-value {
+        font-size: 28px;
+      }
+
+      .profit-usd {
+        font-size: 13px;
+      }
+
+      .fuel-badge {
+        font-size: 11px;
+        padding: 6px 12px;
+        margin-top: 12px;
+      }
+
+      .profit-indicator {
+        margin-top: 16px;
+      }
+
+      .scrollHint {
+        display: block;
+      }
+
+      td,
+      th {
+        padding: 12px 10px;
+        font-size: 12px;
+      }
+
+      th {
+        font-size: 10px;
+      }
+
+      .row {
+        gap: 12px;
+      }
+    }
+
+    /* Small phones (iPhone SE, etc) */
+    @media (max-width: 375px) {
+      .wrap {
+        padding: 12px 10px 28px;
+      }
+
+      h1 {
+        font-size: 15px;
+      }
+
+      .profit-value {
+        font-size: 24px;
+      }
+
+      .tabbtn {
+        padding: 12px 10px;
+        font-size: 14px;
+      }
+
+      input {
+        padding: 14px 12px;
+        font-size: 16px;
+      }
     }
 
     @media (max-width: 900px) {
-      .mainRow .summary { order: -1; }
-      .mainRow .inputs { order: 0; }
+      .mainRow .summary {
+        order: -1;
+      }
+
+      .mainRow .inputs {
+        order: 0;
+      }
     }
   </style>
 </head>
@@ -423,9 +548,6 @@
           </div>
         </div>
 
-        <div class="note">
-          <strong>Константы:</strong> НДС 20%, ЭкоНалог 2%, Налог на прибыль 18%. Расходы на брокера/пробы: 260 000 AMD/машина.
-        </div>
       </div>
 
       <div class="card summary">
@@ -460,260 +582,383 @@
           </thead>
 
           <tbody>
-            <tr class="section"><td colspan="3">Входные данные</td></tr>
-            <tr><td>Цена закупки ($/тонна)</td><td class="mono" id="t_purchaseAmd">—</td><td class="mono" id="t_purchaseUsd">—</td></tr>
-            <tr><td>Доставка ($/тонна)</td><td class="mono" id="t_deliveryAmd">—</td><td class="mono" id="t_deliveryUsd">—</td></tr>
-            <tr><td>Пошлина ($/тонна)</td><td class="mono" id="t_customsDutyAmd">—</td><td class="mono" id="t_customsDutyUsd">—</td></tr>
-            <tr><td>Цена продажи (AMD/литр)</td><td class="mono" id="t_sellAmdPerL">—</td><td class="mono" id="t_sellUsdPerL">—</td></tr>
-            <tr><td>Тоннаж машины (тонн)</td><td class="mono" id="t_truckTons">—</td><td class="mono">—</td></tr>
-            <tr><td>Курс доллара (AMD/$)</td><td class="mono" id="t_rate">—</td><td class="mono">—</td></tr>
-            <tr><td>Плотность (кг/л)</td><td class="mono" id="t_densityIn">—</td><td class="mono">—</td></tr>
+            <tr class="section">
+              <td colspan="3">Входные данные</td>
+            </tr>
+            <tr>
+              <td>Цена закупки ($/тонна)</td>
+              <td class="mono" id="t_purchaseAmd">—</td>
+              <td class="mono" id="t_purchaseUsd">—</td>
+            </tr>
+            <tr>
+              <td>Доставка ($/тонна)</td>
+              <td class="mono" id="t_deliveryAmd">—</td>
+              <td class="mono" id="t_deliveryUsd">—</td>
+            </tr>
+            <tr>
+              <td>Пошлина ($/тонна)</td>
+              <td class="mono" id="t_customsDutyAmd">—</td>
+              <td class="mono" id="t_customsDutyUsd">—</td>
+            </tr>
+            <tr>
+              <td>Цена продажи (AMD/литр)</td>
+              <td class="mono" id="t_sellAmdPerL">—</td>
+              <td class="mono" id="t_sellUsdPerL">—</td>
+            </tr>
+            <tr>
+              <td>Тоннаж машины (тонн)</td>
+              <td class="mono" id="t_truckTons">—</td>
+              <td class="mono">—</td>
+            </tr>
+            <tr>
+              <td>Курс доллара (AMD/$)</td>
+              <td class="mono" id="t_rate">—</td>
+              <td class="mono">—</td>
+            </tr>
+            <tr>
+              <td>Плотность (кг/л)</td>
+              <td class="mono" id="t_densityIn">—</td>
+              <td class="mono">—</td>
+            </tr>
 
-            <tr class="section"><td colspan="3">Налоги и сборы</td></tr>
-            <tr><td>Тип топлива</td><td class="mono" id="t_fuelName">—</td><td class="mono">—</td></tr>
-            <tr><td>Акциз (AMD/тонна)</td><td class="mono" id="t_exciseAmd">—</td><td class="mono" id="t_exciseUsd">—</td></tr>
+            <tr class="section">
+              <td colspan="3">Налоги и сборы</td>
+            </tr>
+            <tr>
+              <td>Тип топлива</td>
+              <td class="mono" id="t_fuelName">—</td>
+              <td class="mono">—</td>
+            </tr>
+            <tr>
+              <td>Акциз (AMD/тонна)</td>
+              <td class="mono" id="t_exciseAmd">—</td>
+              <td class="mono" id="t_exciseUsd">—</td>
+            </tr>
             <tr id="rowGasDiff" style="display:none">
               <td>Разница до минимального платежа</td>
               <td class="mono" id="t_gasDiffAmd">—</td>
               <td class="mono" id="t_gasDiffUsd">—</td>
             </tr>
-            <tr><td>Экологический налог (2%)</td><td class="mono" id="t_ecoAmd">—</td><td class="mono" id="t_ecoUsd">—</td></tr>
-            <tr><td>Пошлина</td><td class="mono" id="t_customsDutyTableAmd">—</td><td class="mono" id="t_customsDutyTableUsd">—</td></tr>
+            <tr>
+              <td>Экологический налог (2%)</td>
+              <td class="mono" id="t_ecoAmd">—</td>
+              <td class="mono" id="t_ecoUsd">—</td>
+            </tr>
+            <tr>
+              <td>Пошлина</td>
+              <td class="mono" id="t_customsDutyTableAmd">—</td>
+              <td class="mono" id="t_customsDutyTableUsd">—</td>
+            </tr>
 
-            <tr class="section"><td colspan="3">Расчёт на 1 тонну</td></tr>
-            <tr><td>База для НДС (закупка+доставка+акциз)</td><td class="mono" id="t_vatBaseAmd">—</td><td class="mono" id="t_vatBaseUsd">—</td></tr>
-            <tr><td>НДС 20%</td><td class="mono" id="t_vatAmd">—</td><td class="mono" id="t_vatUsd">—</td></tr>
-            <tr><td>Итого затрат на тонну</td><td class="mono" id="t_totalCostTonAmd">—</td><td class="mono" id="t_totalCostTonUsd">—</td></tr>
-            <tr><td>Литров в тонне</td><td class="mono" id="t_litersPerTon">—</td><td class="mono">—</td></tr>
-            <tr><td>Себестоимость 1л</td><td class="mono" id="t_costPerLAmd">—</td><td class="mono" id="t_costPerLUsd">—</td></tr>
-            <tr><td>Маржа на 1л</td><td class="mono" id="t_marginPerLAmd">—</td><td class="mono" id="t_marginPerLUsd">—</td></tr>
-            <tr><td>Маржа %</td><td class="mono" id="t_marginPct">—</td><td class="mono">—</td></tr>
+            <tr class="section">
+              <td colspan="3">Расчёт на 1 тонну</td>
+            </tr>
+            <tr>
+              <td>База для НДС (закупка+доставка+акциз)</td>
+              <td class="mono" id="t_vatBaseAmd">—</td>
+              <td class="mono" id="t_vatBaseUsd">—</td>
+            </tr>
+            <tr>
+              <td>НДС 20%</td>
+              <td class="mono" id="t_vatAmd">—</td>
+              <td class="mono" id="t_vatUsd">—</td>
+            </tr>
+            <tr>
+              <td>Итого затрат на тонну</td>
+              <td class="mono" id="t_totalCostTonAmd">—</td>
+              <td class="mono" id="t_totalCostTonUsd">—</td>
+            </tr>
+            <tr>
+              <td>Литров в тонне</td>
+              <td class="mono" id="t_litersPerTon">—</td>
+              <td class="mono">—</td>
+            </tr>
+            <tr>
+              <td>Себестоимость 1л</td>
+              <td class="mono" id="t_costPerLAmd">—</td>
+              <td class="mono" id="t_costPerLUsd">—</td>
+            </tr>
+            <tr>
+              <td>Маржа на 1л</td>
+              <td class="mono" id="t_marginPerLAmd">—</td>
+              <td class="mono" id="t_marginPerLUsd">—</td>
+            </tr>
+            <tr>
+              <td>Маржа %</td>
+              <td class="mono" id="t_marginPct">—</td>
+              <td class="mono">—</td>
+            </tr>
 
-            <tr class="section"><td colspan="3">Расчёт на 1 машину</td></tr>
-            <tr><td>Общий объём (л.)</td><td class="mono" id="t_totalLiters">—</td><td class="mono">—</td></tr>
-            <tr><td>НДС+Акциз+ЭН+Пошлина на весь объём</td><td class="mono" id="t_taxBlockAmd">—</td><td class="mono" id="t_taxBlockUsd">—</td></tr>
-            <tr><td>Себестоимость всего</td><td class="mono" id="t_totalCostTruckAmd">—</td><td class="mono" id="t_totalCostTruckUsd">—</td></tr>
-            <tr><td>Выручка (все литры)</td><td class="mono" id="t_revenueTruckAmd">—</td><td class="mono" id="t_revenueTruckUsd">—</td></tr>
+            <tr class="section">
+              <td colspan="3">Расчёт на 1 машину</td>
+            </tr>
+            <tr>
+              <td>Общий объём (л.)</td>
+              <td class="mono" id="t_totalLiters">—</td>
+              <td class="mono">—</td>
+            </tr>
+            <tr>
+              <td>НДС+Акциз+ЭН+Пошлина на весь объём</td>
+              <td class="mono" id="t_taxBlockAmd">—</td>
+              <td class="mono" id="t_taxBlockUsd">—</td>
+            </tr>
+            <tr>
+              <td>Себестоимость всего</td>
+              <td class="mono" id="t_totalCostTruckAmd">—</td>
+              <td class="mono" id="t_totalCostTruckUsd">—</td>
+            </tr>
+            <tr>
+              <td>Выручка (все литры)</td>
+              <td class="mono" id="t_revenueTruckAmd">—</td>
+              <td class="mono" id="t_revenueTruckUsd">—</td>
+            </tr>
 
-            <tr class="section"><td colspan="3">Доход / НДС / прибыль</td></tr>
-            <tr><td>Доход на 1 тонну</td><td class="mono" id="t_incomeTonAmd">—</td><td class="mono" id="t_incomeTonUsd">—</td></tr>
-            <tr><td>Доход на 1 машину</td><td class="mono" id="t_incomeTruckAmd">—</td><td class="mono" id="t_incomeTruckUsd">—</td></tr>
-            <tr><td>Переплаченный НДС на 1 литр</td><td class="mono" id="t_overVatPerLAmd">—</td><td class="mono" id="t_overVatPerLUsd">—</td></tr>
-            <tr><td>Переплаченный НДС на 1 тонну</td><td class="mono" id="t_overVatPerTonAmd">—</td><td class="mono" id="t_overVatPerTonUsd">—</td></tr>
-            <tr><td>Прибыль до налогов</td><td class="mono" id="t_profitAfterVatAmd">—</td><td class="mono" id="t_profitAfterVatUsd">—</td></tr>
-            <tr><td><b>Чистая прибыль (18% налог)</b></td><td class="mono" id="t_netProfitAmd">—</td><td class="mono" id="t_netProfitUsd">—</td></tr>
+            <tr class="section">
+              <td colspan="3">Доход / НДС / прибыль</td>
+            </tr>
+            <tr>
+              <td>Доход на 1 тонну</td>
+              <td class="mono" id="t_incomeTonAmd">—</td>
+              <td class="mono" id="t_incomeTonUsd">—</td>
+            </tr>
+            <tr>
+              <td>Доход на 1 машину</td>
+              <td class="mono" id="t_incomeTruckAmd">—</td>
+              <td class="mono" id="t_incomeTruckUsd">—</td>
+            </tr>
+            <tr>
+              <td>Переплаченный НДС на 1 литр</td>
+              <td class="mono" id="t_overVatPerLAmd">—</td>
+              <td class="mono" id="t_overVatPerLUsd">—</td>
+            </tr>
+            <tr>
+              <td>Переплаченный НДС на 1 тонну</td>
+              <td class="mono" id="t_overVatPerTonAmd">—</td>
+              <td class="mono" id="t_overVatPerTonUsd">—</td>
+            </tr>
+            <tr>
+              <td>Прибыль до налогов</td>
+              <td class="mono" id="t_profitAfterVatAmd">—</td>
+              <td class="mono" id="t_profitAfterVatUsd">—</td>
+            </tr>
+            <tr>
+              <td><b>Чистая прибыль (18% налог)</b></td>
+              <td class="mono" id="t_netProfitAmd">—</td>
+              <td class="mono" id="t_netProfitUsd">—</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-<script>
-(function () {
-  const VAT = 0.20;
-  const ECO = 0.02;
-  const TAX18 = 0.18;
-  const FIXED_PER_TRUCK_AMD = 260000;
+  <script>
+    (function () {
+      const VAT = 0.20;
+      const ECO = 0.02;
+      const TAX18 = 0.18;
+      const FIXED_PER_TRUCK_AMD = 260000;
 
-  const fuels = {
-    DT: { name: "Дизельное топливо", density: 0.845, exciseMode: "fixed", exciseFixedAmd: 17608 },
-    AI92: { name: "АИ‑92/95 Бензин", density: 0.745, exciseMode: "min_vat_excise", baseExciseAmd: 54064, minVatPlusExciseAmd: 167400 }
-  };
+      const fuels = {
+        DT: { name: "Дизельное топливо", density: 0.845, exciseMode: "fixed", exciseFixedAmd: 17608 },
+        AI92: { name: "АИ‑92/95 Бензин", density: 0.745, exciseMode: "min_vat_excise", baseExciseAmd: 54064, minVatPlusExciseAmd: 167400 }
+      };
 
-  let currentFuel = "DT";
+      let currentFuel = "DT";
 
-  const el = (id) => document.getElementById(id);
-  const nf0 = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 });
-  const nf2 = new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const nf4 = new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+      const el = (id) => document.getElementById(id);
+      const nf0 = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 });
+      const nf2 = new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const nf4 = new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
 
-  const fmtAmd0 = (x) => `${nf0.format(x)} AMD`;
-  const fmtUsd2 = (x) => `${nf2.format(x)} $`;
-  const fmtNum2 = (x) => nf2.format(x);
-  const fmtNum4 = (x) => nf4.format(x);
+      const fmtAmd0 = (x) => `${nf0.format(x)} AMD`;
+      const fmtUsd2 = (x) => `${nf2.format(x)} $`;
+      const fmtNum2 = (x) => nf2.format(x);
+      const fmtNum4 = (x) => nf4.format(x);
 
-  function num(v) {
-    const n = Number(v);
-    return Number.isFinite(n) ? n : 0;
-  }
+      function num(v) {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+      }
 
-  function calc() {
-    const purchaseUsd = num(el("purchaseUsd").value);
-    const deliveryUsd = num(el("deliveryUsd").value);
-    const customsDutyUsd = num(el("customsDutyUsd").value);
-    const sellAmdPerL = num(el("sellAmdPerL").value);
-    const truckTons = num(el("truckTons").value);
-    const rate = Math.max(0.0000001, num(el("usdRate").value));
-    const f = fuels[currentFuel];
+      function calc() {
+        const purchaseUsd = num(el("purchaseUsd").value);
+        const deliveryUsd = num(el("deliveryUsd").value);
+        const customsDutyUsd = num(el("customsDutyUsd").value);
+        const sellAmdPerL = num(el("sellAmdPerL").value);
+        const truckTons = num(el("truckTons").value);
+        const rate = Math.max(0.0000001, num(el("usdRate").value));
+        const f = fuels[currentFuel];
 
-    const density = Math.max(0.0000001, num(el("density").value));
+        const density = Math.max(0.0000001, num(el("density").value));
 
-    const purchaseAmd = purchaseUsd * rate;
-    const deliveryAmd = deliveryUsd * rate;
-    const customsDutyAmd = customsDutyUsd * rate;
+        const purchaseAmd = purchaseUsd * rate;
+        const deliveryAmd = deliveryUsd * rate;
+        const customsDutyAmd = customsDutyUsd * rate;
 
-    let exciseAmd = 0;
-    let gasDiffAmd = 0;
+        let exciseAmd = 0;
+        let gasDiffAmd = 0;
 
-    if (f.exciseMode === "fixed") {
-      exciseAmd = f.exciseFixedAmd;
-    } else {
-      gasDiffAmd = (VAT * (purchaseAmd + deliveryAmd) + f.baseExciseAmd) - f.minVatPlusExciseAmd;
-      const xFromMin = (f.minVatPlusExciseAmd - VAT * (purchaseAmd + deliveryAmd)) / (1 + VAT);
-      exciseAmd = Math.max(f.baseExciseAmd, xFromMin);
-    }
+        if (f.exciseMode === "fixed") {
+          exciseAmd = f.exciseFixedAmd;
+        } else {
+          gasDiffAmd = (VAT * (purchaseAmd + deliveryAmd) + f.baseExciseAmd) - f.minVatPlusExciseAmd;
+          const xFromMin = (f.minVatPlusExciseAmd - VAT * (purchaseAmd + deliveryAmd)) / (1 + VAT);
+          exciseAmd = Math.max(f.baseExciseAmd, xFromMin);
+        }
 
-    const ecoAmd = (purchaseAmd + deliveryAmd) * ECO;
+        const ecoAmd = (purchaseAmd + deliveryAmd) * ECO;
 
-    // База для НДС: закупка + доставка + акциз (пошлина и эконалог НЕ входят)
-    const vatBaseAmd = purchaseAmd + deliveryAmd + exciseAmd;
-    const vatAmd = vatBaseAmd * VAT;
+        // База для НДС: закупка + доставка + акциз (пошлина и эконалог НЕ входят)
+        const vatBaseAmd = purchaseAmd + deliveryAmd + exciseAmd;
+        const vatAmd = vatBaseAmd * VAT;
 
-    // Итого затрат: закупка + доставка + акциз + эконалог + пошлина + НДС
-    const totalCostTonAmd = purchaseAmd + deliveryAmd + exciseAmd + ecoAmd + customsDutyAmd + vatAmd;
+        // Итого затрат: закупка + доставка + акциз + эконалог + пошлина + НДС
+        const totalCostTonAmd = purchaseAmd + deliveryAmd + exciseAmd + ecoAmd + customsDutyAmd + vatAmd;
 
-    const litersPerTon = 1000 / density;
-    const costPerLAmd = totalCostTonAmd / litersPerTon;
+        const litersPerTon = 1000 / density;
+        const costPerLAmd = totalCostTonAmd / litersPerTon;
 
-    const marginPerLAmd = sellAmdPerL - costPerLAmd;
-    const marginPct = costPerLAmd === 0 ? 0 : (marginPerLAmd / costPerLAmd);
+        const marginPerLAmd = sellAmdPerL - costPerLAmd;
+        const marginPct = costPerLAmd === 0 ? 0 : (marginPerLAmd / costPerLAmd);
 
-    const totalLiters = litersPerTon * truckTons;
+        const totalLiters = litersPerTon * truckTons;
 
-    // Налоговый блок теперь включает пошлину
-    const taxBlockAmd = (vatAmd + exciseAmd + ecoAmd + customsDutyAmd) * truckTons;
+        // Налоговый блок теперь включает пошлину
+        const taxBlockAmd = (vatAmd + exciseAmd + ecoAmd + customsDutyAmd) * truckTons;
 
-    const incomeTonAmd = (sellAmdPerL * litersPerTon) - totalCostTonAmd;
-    const incomeTruckAmd = incomeTonAmd * truckTons;
+        const incomeTonAmd = (sellAmdPerL * litersPerTon) - totalCostTonAmd;
+        const incomeTruckAmd = incomeTonAmd * truckTons;
 
-    const outputVatPerLAmd = sellAmdPerL * VAT / (1 + VAT);
-    const inputVatPerLAmd = vatAmd / litersPerTon;
+        const outputVatPerLAmd = sellAmdPerL * VAT / (1 + VAT);
+        const inputVatPerLAmd = vatAmd / litersPerTon;
 
-    const overVatPerLAmd = outputVatPerLAmd - inputVatPerLAmd;
-    const overVatPerTonAmd = overVatPerLAmd * litersPerTon;
+        const overVatPerLAmd = outputVatPerLAmd - inputVatPerLAmd;
+        const overVatPerTonAmd = overVatPerLAmd * litersPerTon;
 
-    const profitAfterVatAmd = incomeTruckAmd - (overVatPerLAmd * totalLiters) - FIXED_PER_TRUCK_AMD;
-    const netProfitAmd = profitAfterVatAmd * (1 - TAX18);
+        const profitAfterVatAmd = incomeTruckAmd - (overVatPerLAmd * totalLiters) - FIXED_PER_TRUCK_AMD;
+        const netProfitAmd = profitAfterVatAmd * (1 - TAX18);
 
-    const toUsd = (amd) => amd / rate;
+        const toUsd = (amd) => amd / rate;
 
-    // Update summary
-    const profitEl = el("netProfitValue");
-    const profitBar = el("profitBar");
-    profitEl.textContent = fmtAmd0(netProfitAmd);
-    el("netProfitUsd").textContent = `≈ ${fmtUsd2(toUsd(netProfitAmd))}`;
-    
-    if (netProfitAmd >= 0) {
-      profitEl.classList.remove("negative");
-      profitEl.classList.add("positive");
-      profitBar.classList.remove("negative");
-      profitBar.classList.add("positive");
-      const barWidth = Math.min(100, 50 + (netProfitAmd / 10000));
-      profitBar.style.width = barWidth + "%";
-    } else {
-      profitEl.classList.remove("positive");
-      profitEl.classList.add("negative");
-      profitBar.classList.remove("positive");
-      profitBar.classList.add("negative");
-      const barWidth = Math.max(5, 50 + (netProfitAmd / 10000));
-      profitBar.style.width = barWidth + "%";
-    }
+        // Update summary
+        const profitEl = el("netProfitValue");
+        const profitBar = el("profitBar");
+        profitEl.textContent = fmtAmd0(netProfitAmd);
+        el("netProfitUsd").textContent = `≈ ${fmtUsd2(toUsd(netProfitAmd))}`;
 
-    el("fuelName").textContent = `${f.name} • ${fmtNum4(density)} кг/л`;
+        if (netProfitAmd >= 0) {
+          profitEl.classList.remove("negative");
+          profitEl.classList.add("positive");
+          profitBar.classList.remove("negative");
+          profitBar.classList.add("positive");
+          const barWidth = Math.min(100, 50 + (netProfitAmd / 10000));
+          profitBar.style.width = barWidth + "%";
+        } else {
+          profitEl.classList.remove("positive");
+          profitEl.classList.add("negative");
+          profitBar.classList.remove("positive");
+          profitBar.classList.add("negative");
+          const barWidth = Math.max(5, 50 + (netProfitAmd / 10000));
+          profitBar.style.width = barWidth + "%";
+        }
 
-    // Table data
-    el("t_purchaseAmd").textContent = fmtAmd0(purchaseAmd);
-    el("t_purchaseUsd").textContent = fmtUsd2(purchaseUsd);
-    el("t_deliveryAmd").textContent = fmtAmd0(deliveryAmd);
-    el("t_deliveryUsd").textContent = fmtUsd2(deliveryUsd);
-    el("t_customsDutyAmd").textContent = fmtAmd0(customsDutyAmd);
-    el("t_customsDutyUsd").textContent = fmtUsd2(customsDutyUsd);
-    el("t_sellAmdPerL").textContent = `${fmtNum2(sellAmdPerL)} AMD/л`;
-    el("t_sellUsdPerL").textContent = `${fmtNum4(toUsd(sellAmdPerL))} $/л`;
-    el("t_truckTons").textContent = fmtNum2(truckTons);
-    el("t_rate").textContent = fmtNum4(rate);
-    el("t_densityIn").textContent = fmtNum4(density);
+        el("fuelName").textContent = `${f.name} • ${fmtNum4(density)} кг/л`;
 
-    el("t_fuelName").textContent = f.name;
-    el("t_exciseAmd").textContent = fmtAmd0(exciseAmd);
-    el("t_exciseUsd").textContent = fmtUsd2(toUsd(exciseAmd));
+        // Table data
+        el("t_purchaseAmd").textContent = fmtAmd0(purchaseAmd);
+        el("t_purchaseUsd").textContent = fmtUsd2(purchaseUsd);
+        el("t_deliveryAmd").textContent = fmtAmd0(deliveryAmd);
+        el("t_deliveryUsd").textContent = fmtUsd2(deliveryUsd);
+        el("t_customsDutyAmd").textContent = fmtAmd0(customsDutyAmd);
+        el("t_customsDutyUsd").textContent = fmtUsd2(customsDutyUsd);
+        el("t_sellAmdPerL").textContent = `${fmtNum2(sellAmdPerL)} AMD/л`;
+        el("t_sellUsdPerL").textContent = `${fmtNum4(toUsd(sellAmdPerL))} $/л`;
+        el("t_truckTons").textContent = fmtNum2(truckTons);
+        el("t_rate").textContent = fmtNum4(rate);
+        el("t_densityIn").textContent = fmtNum4(density);
 
-    const rowGasDiff = el("rowGasDiff");
-    if (f.exciseMode === "min_vat_excise") {
-      rowGasDiff.style.display = "";
-      el("t_gasDiffAmd").textContent = fmtAmd0(gasDiffAmd);
-      el("t_gasDiffUsd").textContent = fmtUsd2(toUsd(gasDiffAmd));
-    } else {
-      rowGasDiff.style.display = "none";
-    }
+        el("t_fuelName").textContent = f.name;
+        el("t_exciseAmd").textContent = fmtAmd0(exciseAmd);
+        el("t_exciseUsd").textContent = fmtUsd2(toUsd(exciseAmd));
 
-    el("t_ecoAmd").textContent = fmtAmd0(ecoAmd);
-    el("t_ecoUsd").textContent = fmtUsd2(toUsd(ecoAmd));
-    el("t_customsDutyTableAmd").textContent = fmtAmd0(customsDutyAmd);
-    el("t_customsDutyTableUsd").textContent = fmtUsd2(customsDutyUsd);
+        const rowGasDiff = el("rowGasDiff");
+        if (f.exciseMode === "min_vat_excise") {
+          rowGasDiff.style.display = "";
+          el("t_gasDiffAmd").textContent = fmtAmd0(gasDiffAmd);
+          el("t_gasDiffUsd").textContent = fmtUsd2(toUsd(gasDiffAmd));
+        } else {
+          rowGasDiff.style.display = "none";
+        }
 
-    el("t_vatBaseAmd").textContent = fmtAmd0(vatBaseAmd);
-    el("t_vatBaseUsd").textContent = fmtUsd2(toUsd(vatBaseAmd));
-    el("t_vatAmd").textContent = fmtAmd0(vatAmd);
-    el("t_vatUsd").textContent = fmtUsd2(toUsd(vatAmd));
-    el("t_totalCostTonAmd").textContent = fmtAmd0(totalCostTonAmd);
-    el("t_totalCostTonUsd").textContent = fmtUsd2(toUsd(totalCostTonAmd));
+        el("t_ecoAmd").textContent = fmtAmd0(ecoAmd);
+        el("t_ecoUsd").textContent = fmtUsd2(toUsd(ecoAmd));
+        el("t_customsDutyTableAmd").textContent = fmtAmd0(customsDutyAmd);
+        el("t_customsDutyTableUsd").textContent = fmtUsd2(customsDutyUsd);
 
-    el("t_litersPerTon").textContent = fmtNum4(litersPerTon);
-    el("t_costPerLAmd").textContent = `${fmtNum4(costPerLAmd)} AMD/л`;
-    el("t_costPerLUsd").textContent = `${fmtNum4(toUsd(costPerLAmd))} $/л`;
+        el("t_vatBaseAmd").textContent = fmtAmd0(vatBaseAmd);
+        el("t_vatBaseUsd").textContent = fmtUsd2(toUsd(vatBaseAmd));
+        el("t_vatAmd").textContent = fmtAmd0(vatAmd);
+        el("t_vatUsd").textContent = fmtUsd2(toUsd(vatAmd));
+        el("t_totalCostTonAmd").textContent = fmtAmd0(totalCostTonAmd);
+        el("t_totalCostTonUsd").textContent = fmtUsd2(toUsd(totalCostTonAmd));
 
-    el("t_marginPerLAmd").textContent = `${fmtNum4(marginPerLAmd)} AMD/л`;
-    el("t_marginPerLUsd").textContent = `${fmtNum4(toUsd(marginPerLAmd))} $/л`;
-    el("t_marginPct").textContent = `${fmtNum2(marginPct * 100)}%`;
+        el("t_litersPerTon").textContent = fmtNum4(litersPerTon);
+        el("t_costPerLAmd").textContent = `${fmtNum4(costPerLAmd)} AMD/л`;
+        el("t_costPerLUsd").textContent = `${fmtNum4(toUsd(costPerLAmd))} $/л`;
 
-    el("t_totalLiters").textContent = fmtNum4(totalLiters);
+        el("t_marginPerLAmd").textContent = `${fmtNum4(marginPerLAmd)} AMD/л`;
+        el("t_marginPerLUsd").textContent = `${fmtNum4(toUsd(marginPerLAmd))} $/л`;
+        el("t_marginPct").textContent = `${fmtNum2(marginPct * 100)}%`;
 
-    el("t_taxBlockAmd").textContent = fmtAmd0(taxBlockAmd);
-    el("t_taxBlockUsd").textContent = fmtUsd2(toUsd(taxBlockAmd));
+        el("t_totalLiters").textContent = fmtNum4(totalLiters);
 
-    const totalCostTruckAmd = totalCostTonAmd * truckTons;
-    const revenueTruckAmd = sellAmdPerL * totalLiters;
+        el("t_taxBlockAmd").textContent = fmtAmd0(taxBlockAmd);
+        el("t_taxBlockUsd").textContent = fmtUsd2(toUsd(taxBlockAmd));
 
-    el("t_totalCostTruckAmd").textContent = fmtAmd0(totalCostTruckAmd);
-    el("t_totalCostTruckUsd").textContent = fmtUsd2(toUsd(totalCostTruckAmd));
-    el("t_revenueTruckAmd").textContent = fmtAmd0(revenueTruckAmd);
-    el("t_revenueTruckUsd").textContent = fmtUsd2(toUsd(revenueTruckAmd));
+        const totalCostTruckAmd = totalCostTonAmd * truckTons;
+        const revenueTruckAmd = sellAmdPerL * totalLiters;
 
-    el("t_incomeTonAmd").textContent = fmtAmd0(incomeTonAmd);
-    el("t_incomeTonUsd").textContent = fmtUsd2(toUsd(incomeTonAmd));
-    el("t_incomeTruckAmd").textContent = fmtAmd0(incomeTruckAmd);
-    el("t_incomeTruckUsd").textContent = fmtUsd2(toUsd(incomeTruckAmd));
+        el("t_totalCostTruckAmd").textContent = fmtAmd0(totalCostTruckAmd);
+        el("t_totalCostTruckUsd").textContent = fmtUsd2(toUsd(totalCostTruckAmd));
+        el("t_revenueTruckAmd").textContent = fmtAmd0(revenueTruckAmd);
+        el("t_revenueTruckUsd").textContent = fmtUsd2(toUsd(revenueTruckAmd));
 
-    el("t_overVatPerLAmd").textContent = `${fmtNum4(overVatPerLAmd)} AMD/л`;
-    el("t_overVatPerLUsd").textContent = `${fmtNum4(toUsd(overVatPerLAmd))} $/л`;
-    el("t_overVatPerTonAmd").textContent = fmtAmd0(overVatPerTonAmd);
-    el("t_overVatPerTonUsd").textContent = fmtUsd2(toUsd(overVatPerTonAmd));
+        el("t_incomeTonAmd").textContent = fmtAmd0(incomeTonAmd);
+        el("t_incomeTonUsd").textContent = fmtUsd2(toUsd(incomeTonAmd));
+        el("t_incomeTruckAmd").textContent = fmtAmd0(incomeTruckAmd);
+        el("t_incomeTruckUsd").textContent = fmtUsd2(toUsd(incomeTruckAmd));
 
-    el("t_profitAfterVatAmd").textContent = fmtAmd0(profitAfterVatAmd);
-    el("t_profitAfterVatUsd").textContent = fmtUsd2(toUsd(profitAfterVatAmd));
+        el("t_overVatPerLAmd").textContent = `${fmtNum4(overVatPerLAmd)} AMD/л`;
+        el("t_overVatPerLUsd").textContent = `${fmtNum4(toUsd(overVatPerLAmd))} $/л`;
+        el("t_overVatPerTonAmd").textContent = fmtAmd0(overVatPerTonAmd);
+        el("t_overVatPerTonUsd").textContent = fmtUsd2(toUsd(overVatPerTonAmd));
 
-    el("t_netProfitAmd").textContent = fmtAmd0(netProfitAmd);
-    el("t_netProfitUsd").textContent = fmtUsd2(toUsd(netProfitAmd));
-  }
+        el("t_profitAfterVatAmd").textContent = fmtAmd0(profitAfterVatAmd);
+        el("t_profitAfterVatUsd").textContent = fmtUsd2(toUsd(profitAfterVatAmd));
 
-  ["purchaseUsd", "deliveryUsd", "customsDutyUsd", "sellAmdPerL", "truckTons", "usdRate", "density"].forEach(id => {
-    el(id).addEventListener("input", calc);
-  });
+        el("t_netProfitAmd").textContent = fmtAmd0(netProfitAmd);
+        el("t_netProfitUsd").textContent = fmtUsd2(toUsd(netProfitAmd));
+      }
 
-  document.querySelectorAll(".tabbtn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".tabbtn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentFuel = btn.dataset.fuel;
+      ["purchaseUsd", "deliveryUsd", "customsDutyUsd", "sellAmdPerL", "truckTons", "usdRate", "density"].forEach(id => {
+        el(id).addEventListener("input", calc);
+      });
+
+      document.querySelectorAll(".tabbtn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tabbtn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentFuel = btn.dataset.fuel;
+          el("density").value = fuels[currentFuel].density;
+          calc();
+        });
+      });
+
       el("density").value = fuels[currentFuel].density;
       calc();
-    });
-  });
-
-  el("density").value = fuels[currentFuel].density;
-  calc();
-})();
-</script>
+    })();
+  </script>
 </body>
+
 </html>
