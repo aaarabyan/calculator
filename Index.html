@@ -512,8 +512,26 @@
         margin-top: 8px;
       }
 
+      .sticky-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .sticky-header .header-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+        border-radius: 8px;
+      }
+
+      .sticky-header h1 {
+        font-size: 14px;
+      }
+
       body {
-        padding-top: calc(100px + env(safe-area-inset-top));
+        padding-top: calc(140px + env(safe-area-inset-top));
       }
     }
 
@@ -565,6 +583,10 @@
       .summary-sticky {
         display: block;
       }
+
+      .wrap .header {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -572,6 +594,10 @@
 <body>
   <!-- Fixed profit block for mobile -->
   <div class="summary-sticky">
+    <div class="sticky-header">
+      <div class="header-icon">⛽</div>
+      <h1>Калькулятор маржинальности топлива</h1>
+    </div>
     <div class="card">
       <div class="summary-card">
         <div class="summary-header">Чистая прибыль на машину</div>
