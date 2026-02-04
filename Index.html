@@ -48,7 +48,7 @@
       padding: 0;
       width: 100%;
       max-width: 100%;
-      overflow-x: hidden;
+      overflow-x: clip;
       background:
         radial-gradient(ellipse 80% 50% at 20% -10%, rgba(56, 189, 248, 0.12), transparent 50%),
         radial-gradient(ellipse 60% 40% at 80% 0%, rgba(34, 197, 94, 0.1), transparent 45%),
@@ -458,6 +458,21 @@
       .row {
         gap: 10px;
       }
+
+      .summary-sticky {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        margin-left: -10px;
+        margin-right: -10px;
+        width: calc(100% + 20px);
+        border-radius: 0 0 14px 14px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .summary-sticky .card {
+        border-radius: 0 0 14px 14px;
+      }
     }
 
     /* Small phones (iPhone SE, etc) */
@@ -485,13 +500,28 @@
       }
     }
 
-    @media (max-width: 900px) {
+    /* Hide sticky block on desktop */
+    .summary-sticky {
+      display: none;
+    }
+
+    @media (min-width: 601px) and (max-width: 900px) {
       .mainRow .summary {
         order: -1;
       }
 
       .mainRow .inputs {
         order: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .mainRow .summary {
+        display: none;
+      }
+
+      .summary-sticky {
+        display: block;
       }
     }
   </style>
@@ -502,6 +532,26 @@
     <div class="header">
       <div class="header-icon">⛽</div>
       <h1>Калькулятор маржинальности топлива</h1>
+    </div>
+
+    <!-- Sticky profit block for mobile -->
+    <div class="summary-sticky">
+      <div class="card">
+        <div class="summary-card">
+          <div class="summary-header">Чистая прибыль на машину</div>
+          <div class="profit-display">
+            <p class="profit-value positive" id="netProfitValueSticky">—</p>
+            <p class="profit-usd" id="netProfitUsdSticky">—</p>
+            <div class="fuel-badge" id="fuelInfoSticky">
+              <span>⛽</span>
+              <span id="fuelNameSticky">—</span>
+            </div>
+          </div>
+          <div class="profit-indicator">
+            <div class="profit-bar positive" id="profitBarSticky"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="row mainRow">
@@ -842,26 +892,42 @@
         // Update summary
         const profitEl = el("netProfitValue");
         const profitBar = el("profitBar");
+        const profitElSticky = el("netProfitValueSticky");
+        const profitBarSticky = el("profitBarSticky");
+
         profitEl.textContent = fmtAmd0(netProfitAmd);
+        profitElSticky.textContent = fmtAmd0(netProfitAmd);
         el("netProfitUsd").textContent = `≈ ${fmtUsd2(toUsd(netProfitAmd))}`;
+        el("netProfitUsdSticky").textContent = `≈ ${fmtUsd2(toUsd(netProfitAmd))}`;
 
         if (netProfitAmd >= 0) {
           profitEl.classList.remove("negative");
           profitEl.classList.add("positive");
+          profitElSticky.classList.remove("negative");
+          profitElSticky.classList.add("positive");
           profitBar.classList.remove("negative");
           profitBar.classList.add("positive");
+          profitBarSticky.classList.remove("negative");
+          profitBarSticky.classList.add("positive");
           const barWidth = Math.min(100, 50 + (netProfitAmd / 10000));
           profitBar.style.width = barWidth + "%";
+          profitBarSticky.style.width = barWidth + "%";
         } else {
           profitEl.classList.remove("positive");
           profitEl.classList.add("negative");
+          profitElSticky.classList.remove("positive");
+          profitElSticky.classList.add("negative");
           profitBar.classList.remove("positive");
           profitBar.classList.add("negative");
+          profitBarSticky.classList.remove("positive");
+          profitBarSticky.classList.add("negative");
           const barWidth = Math.max(5, 50 + (netProfitAmd / 10000));
           profitBar.style.width = barWidth + "%";
+          profitBarSticky.style.width = barWidth + "%";
         }
 
         el("fuelName").textContent = `${f.name} • ${fmtNum4(density)} кг/л`;
+        el("fuelNameSticky").textContent = `${f.name} • ${fmtNum4(density)} кг/л`;
 
         // Table data
         el("t_purchaseAmd").textContent = fmtAmd0(purchaseAmd);
