@@ -460,18 +460,60 @@
       }
 
       .summary-sticky {
-        position: sticky;
+        position: fixed;
         top: 0;
-        z-index: 100;
-        margin-left: -10px;
-        margin-right: -10px;
-        width: calc(100% + 20px);
-        border-radius: 0 0 14px 14px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 8px 10px;
+        padding-top: calc(8px + env(safe-area-inset-top));
+        background: var(--bg);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       }
 
       .summary-sticky .card {
-        border-radius: 0 0 14px 14px;
+        border-radius: 14px;
+        margin: 0;
+      }
+
+      .summary-sticky .summary-card {
+        padding: 0;
+      }
+
+      .summary-sticky .summary-header {
+        font-size: 9px;
+        margin-bottom: 4px;
+      }
+
+      .summary-sticky .profit-display {
+        padding: 6px 0;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .summary-sticky .profit-value {
+        font-size: 22px;
+      }
+
+      .summary-sticky .profit-usd {
+        font-size: 12px;
+        margin-top: 0;
+      }
+
+      .summary-sticky .fuel-badge {
+        margin-top: 0;
+        font-size: 9px;
+        padding: 4px 8px;
+      }
+
+      .summary-sticky .profit-indicator {
+        margin-top: 8px;
+      }
+
+      body {
+        padding-top: calc(100px + env(safe-area-inset-top));
       }
     }
 
@@ -528,30 +570,30 @@
 </head>
 
 <body>
+  <!-- Fixed profit block for mobile -->
+  <div class="summary-sticky">
+    <div class="card">
+      <div class="summary-card">
+        <div class="summary-header">Чистая прибыль на машину</div>
+        <div class="profit-display">
+          <p class="profit-value positive" id="netProfitValueSticky">—</p>
+          <p class="profit-usd" id="netProfitUsdSticky">—</p>
+          <div class="fuel-badge" id="fuelInfoSticky">
+            <span>⛽</span>
+            <span id="fuelNameSticky">—</span>
+          </div>
+        </div>
+        <div class="profit-indicator">
+          <div class="profit-bar positive" id="profitBarSticky"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
     <div class="header">
       <div class="header-icon">⛽</div>
       <h1>Калькулятор маржинальности топлива</h1>
-    </div>
-
-    <!-- Sticky profit block for mobile -->
-    <div class="summary-sticky">
-      <div class="card">
-        <div class="summary-card">
-          <div class="summary-header">Чистая прибыль на машину</div>
-          <div class="profit-display">
-            <p class="profit-value positive" id="netProfitValueSticky">—</p>
-            <p class="profit-usd" id="netProfitUsdSticky">—</p>
-            <div class="fuel-badge" id="fuelInfoSticky">
-              <span>⛽</span>
-              <span id="fuelNameSticky">—</span>
-            </div>
-          </div>
-          <div class="profit-indicator">
-            <div class="profit-bar positive" id="profitBarSticky"></div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="row mainRow">
