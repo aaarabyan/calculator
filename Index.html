@@ -1124,6 +1124,34 @@
       const initTons = num(el("truckTons").value);
       el("truckLiters").value = Math.round(initTons * (1000 / initDensity));
       calc();
+
+      // Fix for mobile keyboard pushing fixed header
+      const stickyHeader = document.querySelector('.summary-sticky');
+      if (stickyHeader && window.visualViewport) {
+        const updateStickyPosition = () => {
+          const viewport = window.visualViewport;
+          // When keyboard opens, viewport.offsetTop changes
+          stickyHeader.style.top = viewport.offsetTop + 'px';
+        };
+
+        window.visualViewport.addEventListener('scroll', updateStickyPosition);
+        window.visualViewport.addEventListener('resize', updateStickyPosition);
+      }
+
+      // Prevent iOS scroll when focusing inputs
+      document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', () => {
+          // Small delay to let iOS do its thing, then scroll back
+          setTimeout(() => {
+            if (window.visualViewport) {
+              const stickyHeader = document.querySelector('.summary-sticky');
+              if (stickyHeader) {
+                stickyHeader.style.top = window.visualViewport.offsetTop + 'px';
+              }
+            }
+          }, 100);
+        });
+      });
     })();
   </script>
 </body>
